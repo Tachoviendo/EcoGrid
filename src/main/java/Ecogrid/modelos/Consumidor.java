@@ -2,6 +2,7 @@ package Ecogrid.modelos;
 
 public class Consumidor extends EntidadRed {
 
+    private static int contador = 0; //contador de todas las instancias.
     // ATRIBUTOS
     private String nombre;
     private int prioridad;
@@ -36,5 +37,7 @@ public class Consumidor extends EntidadRed {
         this.nombre = nombre;
         this.demandaRequerida = demandaRequerida;
         this.prioridad = prioridad;
+        contador++;
+        this.setId(contador);
     }
 }
