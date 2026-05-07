@@ -1,23 +1,31 @@
 package Ecogrid.modelos;
 
-public class Cola<T extends EntidadRed> {
+public class Pila<T extends EntidadRed> {
 
     private ListaEnlazada<T> elementos;
 
-    public Cola() {
+    public Pila() {
         elementos = new ListaEnlazada<>();
     }
 
-    public void encolar(T elemento) {
-        elementos.agregarAlFinal(elemento);
+    public void push(T elemento) {
+        elementos.agregar(elemento);
     }
 
-    public T desencolar() {
+    public T pop() {
         if (estaVacia()) {
             return null;
         }
 
         return elementos.eliminarPrimero();
+    }
+
+    public T cima() {
+        if (estaVacia()) {
+            return null;
+        }
+
+        return elementos.obtenerPrimero();
     }
 
     public boolean estaVacia() {

@@ -64,4 +64,45 @@ public class ListaEnlazada<T extends EntidadRed>  {
 
         return lista;
     }
+
+    public void agregarAlFinal(T dato) {
+        Nodo<T> nuevo = new Nodo<>(dato);
+
+        if (cabeza == null) {
+            cabeza = nuevo;
+            return;
+        }
+
+        Nodo<T> actual = cabeza;
+
+        while (actual.getSiguiente() != null) {
+            actual = actual.getSiguiente();
+        }
+
+        actual.setSiguiente(nuevo);
+    }
+
+    public T eliminarPrimero() {
+        if (cabeza == null) {
+            return null;
+        }
+
+        T dato = cabeza.getDato();
+        cabeza = cabeza.getSiguiente();
+
+        return dato;
+    }
+
+    // Retorna el primer elemento sin eliminarlo
+    public T obtenerPrimero() {
+        if (cabeza == null) {
+            return null;
+        }
+
+        return cabeza.getDato();
+    }
+
+    public boolean estaVacia() {
+        return cabeza == null;
+    }
 }
