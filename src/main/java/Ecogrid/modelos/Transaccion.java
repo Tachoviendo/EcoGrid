@@ -2,7 +2,9 @@ package Ecogrid.modelos;
 
 import java.time.LocalDateTime;
 
-public class Transaccion {
+public class Transaccion extends EntidadRed {
+
+    public static int contador = 0; // contador de todas las instancias.
 
     // Atributos
     private String idTransaccion;
@@ -53,5 +55,13 @@ public class Transaccion {
 
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public Transaccion(String idNodo, String idConsumidor, Double cantidadEnergia) {
+        this.idNodo = idNodo;
+        this.idConsumidor = idConsumidor;
+        this.cantidadEnergia = cantidadEnergia;
+        this.timeStamp = LocalDateTime.now();
+        this.idTransaccion = "T" + (++contador);
     }
 }

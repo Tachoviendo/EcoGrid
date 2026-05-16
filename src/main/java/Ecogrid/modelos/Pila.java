@@ -31,4 +31,8 @@ public class Pila<T extends EntidadRed> {
     public boolean estaVacia() {
         return elementos.estaVacia();
     }
+
+    public void apilar(T elemento) {
+        push(elemento);
+    }
 }

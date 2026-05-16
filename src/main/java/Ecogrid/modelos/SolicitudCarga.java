@@ -4,7 +4,7 @@ package Ecogrid.modelos;
 
 import java.time.LocalDateTime;
 
-public class SolicitudCarga {
+public class SolicitudCarga extends EntidadRed {
 
     // ATRIBUTOS
     private final String idConsumidor;
@@ -24,8 +24,8 @@ public class SolicitudCarga {
         return this.fecha.toString();
     }
 
-    public SolicitudCarga(String idConsumidor, double cantidadRequerida, LocalDateTime fecha) {
-        this.idConsumidor = idConsumidor;
+    public SolicitudCarga(Consumidor consumidor, double cantidadRequerida, LocalDateTime fecha) {
+        this.idConsumidor = String.valueOf(consumidor.getId());
         this.cantidadRequerida = cantidadRequerida;
         this.fecha = fecha;
     }
