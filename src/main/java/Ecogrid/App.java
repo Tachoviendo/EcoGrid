@@ -17,12 +17,14 @@ public class App {
             System.out.println("1. Gestión de Infraestructura");
             System.out.println("2. Gestión de Demanda");
             System.out.println("3. Historial");
+            System.out.println("9. Cargar ciudad demo");
             System.out.println("0. Salir");
             opcion = leerInt("Opción: ");
             switch (opcion) {
                 case 1 -> menuInfraestructura();
                 case 2 -> menuDemanda();
                 case 3 -> menuHistorial();
+                case 9 -> CiudadDemo.cargar(manager);
                 case 0 -> System.out.println("Hasta luego.");
                 default -> System.out.println("Opción inválida.");
             }
