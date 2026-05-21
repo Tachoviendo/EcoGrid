@@ -68,7 +68,7 @@ public class EcoGridManager {
             // buscando nodos disponibles
             if (nodo.getConsumidoresPermitidos().listar()
                     .contains(consumidores.buscarPorId(Integer.parseInt(solicitud.getIdConsumidor())))
-                    && nodo.getCapacidadDisponible() >= nodo.getCargaActual() + solicitud.getCantidadRequerida()) {
+                    && nodo.getCapacidadDisponible() >= solicitud.getCantidadRequerida()) {
                 nodoAsignado = nodo;
                 break;
             }
