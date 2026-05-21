@@ -58,9 +58,7 @@ public class EcoGridManager {
             return; // No hay solicitudes para procesar
         }
 
-        // Se asume que al menos un nodo tiene al consumidor permitido, si no, se ignora
-        // la solicitud
-        SolicitudCarga solicitud = obtenerSolicitudPrioritariCarga();
+        SolicitudCarga solicitud = solicitudesCarga.desencolar();
         NodoEnergia nodoAsignado = null;
         for (NodoEnergia nodo : nodosEnergia.listar()) {
             // Acá checkeo que el nodo tenga al consumidor permitido y que tenga capacidad
@@ -82,7 +80,6 @@ public class EcoGridManager {
             historialTransacciones.registrarTransaccion(transaccion);
             historialTransacciones.registrarEnArchivo("../../../../docs/ejecuciones/historial_transacciones.txt");
             nodoAsignado.setCargaActual(nodoAsignado.getCargaActual() + solicitud.getCantidadRequerida());
-            solicitudesCarga.eliminarElemento(solicitud); // Eliminar la solicitud específica procesada
         }
 
     }
