@@ -6,6 +6,7 @@ public class Consumidor extends EntidadRed {
     // ATRIBUTOS
     private String nombre;
     private double demandaRequerida;
+    private int prioridad;
 
     // GETTERS / SETTERS
     public double getDemanda() {
@@ -20,10 +21,15 @@ public class Consumidor extends EntidadRed {
         return this.nombre;
     }
 
+    public int getPrioridad() {
+        return this.prioridad;
+    }
+
     // CONSTRUCTOR
     public Consumidor(String nombre, double demandaRequerida, int prioridad) {
         this.nombre = nombre;
         this.demandaRequerida = demandaRequerida;
+        this.prioridad = prioridad;
         contador++;
         this.setId(contador);
     }
