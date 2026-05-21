@@ -3,6 +3,7 @@ package Ecogrid.modelos;
 import java.time.LocalDateTime;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 public class EcoGridManager {
     private static final String HISTORIAL_PATH = "historial_transacciones.txt";
@@ -22,18 +23,64 @@ public class EcoGridManager {
         nodosEnergia.agregar(nodo);
     }
 
-    public void eliminarNodo(String idNodo) {
-        nodosEnergia.eliminarPorId(Integer.parseInt(idNodo));
+    public void eliminarNodo(int idNodo) {
+        nodosEnergia.eliminarPorId(idNodo);
     }
 
     public void registrarConsumidor(Consumidor consumidor) {
         consumidores.agregar(consumidor);
     }
 
-    public void encolarNuevaSolicitud(String idConsumidor, double cantidad) {
-        Consumidor consumidor = consumidores.buscarPorId(Integer.parseInt(idConsumidor));
+    public void eliminarConsumidor(int idConsumidor) {
+        consumidores.eliminarPorId(idConsumidor);
+    }
+
+    public NodoEnergia buscarNodo(int id) {
+        return nodosEnergia.buscarPorId(id);
+    }
+
+    public Consumidor buscarConsumidor(int id) {
+        return consumidores.buscarPorId(id);
+    }
+
+    public List<NodoEnergia> listarNodos() {
+        return nodosEnergia.listar();
+    }
+
+    public List<Consumidor> listarConsumidores() {
+        return consumidores.listar();
+    }
+
+    public List<SolicitudCarga> listarSolicitudes() {
+        return solicitudesCarga.listarElementos();
+    }
+
+    public Transaccion obtenerUltimaTransaccion() {
+        return historialTransacciones.obtenerUltimaTransaccion();
+    }
+
+    public boolean vincularConsumidorANodo(int idNodo, int idConsumidor) {
+        NodoEnergia nodo = nodosEnergia.buscarPorId(idNodo);
+        Consumidor consumidor = consumidores.buscarPorId(idConsumidor);
+
+        if (nodo == null || consumidor == null) {
+            return false;
+        }
+
+        if (nodo.consumidorPermitido(idConsumidor)) {
+            return false;
+        }
+
+        nodo.agregarConsumidorPermitido(consumidor);
+        return true;
+    }
+
+    public boolean encolarNuevaSolicitud(int idConsumidor, double cantidad) {
+        Consumidor consumidor = consumidores.buscarPorId(idConsumidor);
+        if (consumidor == null) return false;
         SolicitudCarga nuevaSolicitud = new SolicitudCarga(consumidor, cantidad, LocalDateTime.now());
         solicitudesCarga.encolar(nuevaSolicitud);
+        return true;
     }
 
     // Esto decide cual solicitud tiene prioridad en base a la demanda.
@@ -55,17 +102,14 @@ public class EcoGridManager {
         return solicitudMayor;
     }
 
-    public void procesarSolicitud() {
+    public boolean procesarSolicitud() {
         if (solicitudesCarga.estaVacia()) {
-            return; // No hay solicitudes para procesar
+            return false;
         }
 
         SolicitudCarga solicitud = solicitudesCarga.desencolar();
         NodoEnergia nodoAsignado = null;
         for (NodoEnergia nodo : nodosEnergia.listar()) {
-            // Acá checkeo que el nodo tenga al consumidor permitido y que tenga capacidad
-            // disponible para asignar la carga requerida por la solicitud, si no, sigue
-            // buscando nodos disponibles
             if (nodo.getConsumidoresPermitidos().listar()
                     .contains(consumidores.buscarPorId(Integer.parseInt(solicitud.getIdConsumidor())))
                     && nodo.getCapacidadDisponible() >= solicitud.getCantidadRequerida()) {
@@ -74,16 +118,16 @@ public class EcoGridManager {
             }
         }
 
-        // Registrar la transacción en el historial, actualizar el nodo y eliminar
-        // la solicitud procesada(SI ES QUE HUBO XD)
         if (nodoAsignado != null) {
             Transaccion transaccion = new Transaccion(String.valueOf(nodoAsignado.getId()), solicitud.getIdConsumidor(),
                     solicitud.getCantidadRequerida());
             historialTransacciones.registrarTransaccion(transaccion);
             historialTransacciones.registrarEnArchivo(HISTORIAL_PATH);
             nodoAsignado.setCargaActual(nodoAsignado.getCargaActual() + solicitud.getCantidadRequerida());
+            return true;
         }
 
+        return false;
     }
 
     public void deshacerUltimaTransaccion() {
