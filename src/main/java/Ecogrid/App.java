@@ -17,6 +17,7 @@ public class App {
             System.out.println("1. Gestión de Infraestructura");
             System.out.println("2. Gestión de Demanda");
             System.out.println("3. Historial");
+            System.out.println("8. Ejecutar simulación");
             System.out.println("9. Cargar ciudad demo");
             System.out.println("0. Salir");
             opcion = leerInt("Opción: ");
@@ -24,6 +25,7 @@ public class App {
                 case 1 -> menuInfraestructura();
                 case 2 -> menuDemanda();
                 case 3 -> menuHistorial();
+                case 8 -> ejecutarSimulacion();
                 case 9 -> CiudadDemo.cargar(manager);
                 case 0 -> System.out.println("Hasta luego.");
                 default -> System.out.println("Opción inválida.");
@@ -241,6 +243,41 @@ public class App {
     }
 
     // utilidades
+    private static void ejecutarSimulacion() {
+        if (manager.listarNodos().size() < 2) {
+            System.out.println("Necesitás al menos 2 nodos cargados para ejecutar la simulación.");
+            return;
+        }
+        if (manager.listarConsumidores().isEmpty()) {
+            System.out.println("No hay consumidores registrados.");
+            return;
+        }
+
+        System.out.println("\nEjecutando simulación...");
+        int[] resultado = manager.simularDemandaCiudad();
+        int procesadas = resultado[0];
+        int fallidas   = resultado[1];
+
+        System.out.println("\n+--------------------------------------+");
+        System.out.println("|        RESUMEN DE SIMULACION         |");
+        System.out.println("+--------------------------------------+");
+        System.out.printf( "|  Solicitudes atendidas:   %-10d|%n", procesadas);
+        System.out.printf( "|  Sin nodo disponible:     %-10d|%n", fallidas);
+        System.out.println("+--------------------------------------+");
+
+        List<Transaccion> transacciones = manager.listarTransacciones();
+        if (!transacciones.isEmpty()) {
+            System.out.println("\n--- Transacciones generadas ---");
+            for (Transaccion t : transacciones) {
+                System.out.println("  [" + t.getIdTransaccion() + "]"
+                        + " Nodo " + t.getIdNodo()
+                        + " -> Consumidor " + t.getIdConsumidor()
+                        + " | " + t.getCantidadEnergia() + " kWh"
+                        + " | " + t.getTimeStamp());
+            }
+        }
+    }
+
     private static void imprimirNodo(NodoEnergia n) {
         System.out.println("  [ID " + n.getId() + "] " + n.getTipoFuente()
                 + " | Cap. máx: " + n.getCapacidadMaxima() + " kWh"
