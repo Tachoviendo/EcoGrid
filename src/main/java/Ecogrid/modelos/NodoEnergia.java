@@ -5,6 +5,7 @@ public class NodoEnergia extends EntidadRed {
     public static int contador = 0;
 
     // Atributos
+    private final String tipoFuente;
     private final double capacidadMaxima;
     private double cargaActual;
 
@@ -12,7 +13,8 @@ public class NodoEnergia extends EntidadRed {
     private ListaEnlazada<Consumidor> consumidoresPermitidos;
 
     // Constructor
-    public NodoEnergia(double capacidadMaxima) {
+    public NodoEnergia(String tipoFuente, double capacidadMaxima) {
+        this.tipoFuente = tipoFuente;
         this.capacidadMaxima = capacidadMaxima;
         this.cargaActual = 0;
         this.consumidoresPermitidos = new ListaEnlazada<>();
@@ -22,6 +24,10 @@ public class NodoEnergia extends EntidadRed {
     }
 
     // Getters
+
+    public String getTipoFuente() {
+        return tipoFuente;
+    }
 
     public double getCapacidadMaxima() {
         return capacidadMaxima;

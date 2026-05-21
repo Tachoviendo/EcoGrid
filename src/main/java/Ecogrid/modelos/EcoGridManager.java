@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class EcoGridManager {
+    private static final String HISTORIAL_PATH = "historial_transacciones.txt";
+
     private ListaEnlazada<NodoEnergia> nodosEnergia;
     private ListaEnlazada<Consumidor> consumidores;
     private Cola<SolicitudCarga> solicitudesCarga;
@@ -58,9 +60,7 @@ public class EcoGridManager {
             return; // No hay solicitudes para procesar
         }
 
-        // Se asume que al menos un nodo tiene al consumidor permitido, si no, se ignora
-        // la solicitud
-        SolicitudCarga solicitud = obtenerSolicitudPrioritariCarga();
+        SolicitudCarga solicitud = solicitudesCarga.desencolar();
         NodoEnergia nodoAsignado = null;
         for (NodoEnergia nodo : nodosEnergia.listar()) {
             // Acá checkeo que el nodo tenga al consumidor permitido y que tenga capacidad
@@ -68,7 +68,7 @@ public class EcoGridManager {
             // buscando nodos disponibles
             if (nodo.getConsumidoresPermitidos().listar()
                     .contains(consumidores.buscarPorId(Integer.parseInt(solicitud.getIdConsumidor())))
-                    && nodo.getCapacidadDisponible() >= nodo.getCargaActual() + solicitud.getCantidadRequerida()) {
+                    && nodo.getCapacidadDisponible() >= solicitud.getCantidadRequerida()) {
                 nodoAsignado = nodo;
                 break;
             }
@@ -80,9 +80,8 @@ public class EcoGridManager {
             Transaccion transaccion = new Transaccion(String.valueOf(nodoAsignado.getId()), solicitud.getIdConsumidor(),
                     solicitud.getCantidadRequerida());
             historialTransacciones.registrarTransaccion(transaccion);
-            historialTransacciones.registrarEnArchivo("../../../../docs/ejecuciones/historial_transacciones.txt");
+            historialTransacciones.registrarEnArchivo(HISTORIAL_PATH);
             nodoAsignado.setCargaActual(nodoAsignado.getCargaActual() + solicitud.getCantidadRequerida());
-            solicitudesCarga.eliminarElemento(solicitud); // Eliminar la solicitud específica procesada
         }
 
     }
@@ -111,13 +110,13 @@ public class EcoGridManager {
 
         // Limpiar el archivo de historial
         try {
-            new FileWriter("../../../../docs/ejecuciones/historial_transacciones.txt").close();
+            new FileWriter(HISTORIAL_PATH).close();
         } catch (IOException e) {
             System.err.println("Error al limpiar el archivo de historial: " + e.getMessage());
         }
 
         // Reescribir el archivo sin la última transacción
-        historialTransacciones.registrarEnArchivo("../../../../docs/ejecuciones/historial_transacciones.txt");
+        historialTransacciones.registrarEnArchivo(HISTORIAL_PATH);
     }
 
 }

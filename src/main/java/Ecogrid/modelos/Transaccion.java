@@ -63,5 +63,6 @@ public class Transaccion extends EntidadRed {
         this.cantidadEnergia = cantidadEnergia;
         this.timeStamp = LocalDateTime.now();
         this.idTransaccion = "T" + (++contador);
+        this.setId(contador);
     }
 }
