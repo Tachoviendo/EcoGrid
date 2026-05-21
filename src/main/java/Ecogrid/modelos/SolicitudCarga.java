@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 
 public class SolicitudCarga extends EntidadRed {
 
+    private static int contador = 0;
+
     // ATRIBUTOS
     private final String idConsumidor;
     private final double cantidadRequerida;
@@ -28,6 +30,7 @@ public class SolicitudCarga extends EntidadRed {
         this.idConsumidor = String.valueOf(consumidor.getId());
         this.cantidadRequerida = cantidadRequerida;
         this.fecha = fecha;
+        this.setId(++contador);
     }
 
 }
