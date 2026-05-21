@@ -59,6 +59,22 @@ public class EcoGridManager {
         return historialTransacciones.obtenerUltimaTransaccion();
     }
 
+    public List<Transaccion> listarTransacciones() {
+        return historialTransacciones.listarTransacciones();
+    }
+
+    public int[] simularDemandaCiudad() {
+        for (Consumidor c : consumidores.listar()) {
+            encolarNuevaSolicitud(c.getId(), c.getDemanda());
+        }
+        int procesadas = 0, fallidas = 0;
+        while (!solicitudesCarga.estaVacia()) {
+            if (procesarSolicitud()) procesadas++;
+            else fallidas++;
+        }
+        return new int[]{procesadas, fallidas};
+    }
+
     public boolean vincularConsumidorANodo(int idNodo, int idConsumidor) {
         NodoEnergia nodo = nodosEnergia.buscarPorId(idNodo);
         Consumidor consumidor = consumidores.buscarPorId(idConsumidor);
