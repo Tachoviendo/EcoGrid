@@ -30,6 +30,22 @@ public class EcoGridManager {
         consumidores.agregar(consumidor);
     }
 
+    public boolean vincularConsumidorANodo(int idNodo, int idConsumidor) {
+        NodoEnergia nodo = nodosEnergia.buscarPorId(idNodo);
+        Consumidor consumidor = consumidores.buscarPorId(idConsumidor);
+
+        if (nodo == null || consumidor == null) {
+            return false;
+        }
+
+        if (nodo.consumidorPermitido(idConsumidor)) {
+            return false;
+        }
+
+        nodo.agregarConsumidorPermitido(consumidor);
+        return true;
+    }
+
     public void encolarNuevaSolicitud(String idConsumidor, double cantidad) {
         Consumidor consumidor = consumidores.buscarPorId(Integer.parseInt(idConsumidor));
         SolicitudCarga nuevaSolicitud = new SolicitudCarga(consumidor, cantidad, LocalDateTime.now());
