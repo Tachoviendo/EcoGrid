@@ -1,0 +1,7 @@
+target/
+*.class
+*.log
+historial_transacciones.txt
+.idea/
+*.iml
+.vscode/
