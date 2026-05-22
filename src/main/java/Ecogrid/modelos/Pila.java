@@ -35,4 +35,8 @@ public class Pila<T extends EntidadRed> {
     public void apilar(T elemento) {
         push(elemento);
     }
+
+    public java.util.List<T> listar() {
+        return elementos.listar();
+    }
 }
