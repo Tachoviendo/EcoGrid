@@ -31,6 +31,10 @@ public class Historial {
         return this.transacciones.pop();
     }
 
+    public java.util.List<Transaccion> listarTransacciones() {
+        return this.transacciones.listar();
+    }
+
     public void registrarEnArchivo(String ruta) {
         try {
             FileWriter fw = new FileWriter(ruta, true); // true = append
